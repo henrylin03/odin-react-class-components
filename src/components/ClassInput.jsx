@@ -11,6 +11,7 @@ class ClassInput extends Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleInputChange(e) {
@@ -28,7 +29,27 @@ class ClassInput extends Component {
     }));
   }
 
+  handleDelete(e) {
+    const selectedTodo = e.target.dataset.todo;
+    const todosWithoutSelectedTodo = this.state.todos.filter(
+      (todo) => todo !== selectedTodo
+    );
+    this.setState(() => ({
+      todos: todosWithoutSelectedTodo,
+      inputVal: "",
+    }));
+  }
+
   render() {
+    const todos = this.state.todos.map((todo) => (
+      <li key={todo}>
+        {todo}
+        <button type="button" data-todo={todo} onClick={this.handleDelete}>
+          Delete
+        </button>
+      </li>
+    ));
+
     return (
       <section>
         {/* eslint-disable-next-line react/prop-types */}
@@ -46,11 +67,7 @@ class ClassInput extends Component {
         </form>
         <h4>All the tasks!</h4>
         {/* The list of all the To-Do's, displayed */}
-        <ul>
-          {this.state.todos.map((todo) => (
-            <li key={todo}>{todo}</li>
-          ))}
-        </ul>
+        <ul>{todos}</ul>
       </section>
     );
   }

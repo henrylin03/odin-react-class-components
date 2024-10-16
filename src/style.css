@@ -64,4 +64,5 @@ button {
   border: none;
   border-radius: 0.25rem;
   font-family: 'Merriweather', serif;
+  cursor: pointer;
 }
