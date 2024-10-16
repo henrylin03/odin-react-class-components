@@ -2,7 +2,10 @@
 import { Component } from "react";
 import Count from "./Count";
 
-const DEMO_TASKS = ["Just some demo tasks", "As an example"];
+const DEMO_TASKS = [
+  { id: "demo1", text: "Just some demo tasks" },
+  { id: "demo2", text: "As an example" },
+];
 
 class ClassInput extends Component {
   constructor(props) {
@@ -28,18 +31,21 @@ class ClassInput extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
+
+    const newTaskId = crypto.randomUUID();
     this.setState((state) => ({
-      todos: state.todos.concat(state.inputVal),
+      todos: state.todos.concat({ id: newTaskId, text: state.inputVal }),
       inputVal: "",
       count: state.count + 1,
     }));
   }
 
   handleDelete(e) {
-    const selectedTodo = e.target.dataset.todo;
+    const selectedTodoId = e.target.dataset.todo;
     const todosWithoutSelectedTodo = this.state.todos.filter(
-      (todo) => todo !== selectedTodo
+      (todo) => todo.id !== selectedTodoId
     );
+
     this.setState((state) => ({
       ...state,
       todos: todosWithoutSelectedTodo,
@@ -49,9 +55,9 @@ class ClassInput extends Component {
 
   render() {
     const todos = this.state.todos.map((todo) => (
-      <li key={todo}>
-        {todo}
-        <button type="button" data-todo={todo} onClick={this.handleDelete}>
+      <li key={todo.id}>
+        {todo.text}
+        <button type="button" data-todo={todo.id} onClick={this.handleDelete}>
           Delete
         </button>
       </li>
