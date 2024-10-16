@@ -1,12 +1,17 @@
+/* eslint-disable react/prop-types */
 import { Component } from "react";
+import Count from "./Count";
+
+const DEMO_TASKS = ["Just some demo tasks", "As an example"];
 
 class ClassInput extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      todos: ["Just some demo tasks", "As an example"],
+      todos: DEMO_TASKS,
       inputVal: "",
+      count: DEMO_TASKS.length,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -26,6 +31,7 @@ class ClassInput extends Component {
     this.setState((state) => ({
       todos: state.todos.concat(state.inputVal),
       inputVal: "",
+      count: state.count + 1,
     }));
   }
 
@@ -34,9 +40,10 @@ class ClassInput extends Component {
     const todosWithoutSelectedTodo = this.state.todos.filter(
       (todo) => todo !== selectedTodo
     );
-    this.setState(() => ({
+    this.setState((state) => ({
+      ...state,
       todos: todosWithoutSelectedTodo,
-      inputVal: "",
+      count: todosWithoutSelectedTodo.length,
     }));
   }
 
@@ -68,6 +75,8 @@ class ClassInput extends Component {
         <h4>All the tasks!</h4>
         {/* The list of all the To-Do's, displayed */}
         <ul>{todos}</ul>
+
+        <Count count={this.state.count} />
       </section>
     );
   }
