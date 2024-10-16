@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Component } from "react";
 import Count from "./Count";
+import Task from "./Task";
 
 const DEMO_TASKS = [
   { id: "demo1", text: "Just some demo tasks" },
@@ -20,6 +21,7 @@ class ClassInput extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.updateTaskText = this.updateTaskText.bind(this);
   }
 
   handleInputChange(e) {
@@ -41,7 +43,7 @@ class ClassInput extends Component {
   }
 
   handleDelete(e) {
-    const selectedTodoId = e.target.dataset.todo;
+    const selectedTodoId = e.target.parentNode.id;
     const todosWithoutSelectedTodo = this.state.todos.filter(
       (todo) => todo.id !== selectedTodoId
     );
@@ -53,20 +55,22 @@ class ClassInput extends Component {
     }));
   }
 
-  render() {
-    const todos = this.state.todos.map((todo) => (
-      <li key={todo.id}>
-        {todo.text}
-        <button type="button" data-todo={todo.id} onClick={this.handleDelete}>
-          Delete
-        </button>
-      </li>
-    ));
+  updateTaskText(taskObject) {
+    const updatedTasks = this.state.todos.map((todo) =>
+      todo.id === taskObject.id ? taskObject : todo
+    );
+    this.setState((state) => ({
+      ...state,
+      todos: updatedTasks,
+    }));
+  }
 
+  render() {
     return (
       <section>
         {/* eslint-disable-next-line react/prop-types */}
         <h3>{this.props.name}</h3>
+
         {/* The input field to enter To-Do's */}
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="task-entry">Enter a task: </label>
@@ -78,9 +82,19 @@ class ClassInput extends Component {
           />
           <button type="submit">Submit</button>
         </form>
+
         <h4>All the tasks!</h4>
         {/* The list of all the To-Do's, displayed */}
-        <ul>{todos}</ul>
+        <ul>
+          {this.state.todos.map((todo) => (
+            <Task
+              key={todo.id}
+              todo={todo}
+              handleDelete={this.handleDelete}
+              updateTaskText={this.updateTaskText}
+            />
+          ))}
+        </ul>
 
         <Count count={this.state.count} />
       </section>
